@@ -5,7 +5,11 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
+})
 export class DashboardGateway {
   @WebSocketServer()
   server: Server;
@@ -13,13 +17,13 @@ export class DashboardGateway {
   private counter = 0;
 
   @SubscribeMessage('increment')
-  handleIncreament() {
+  handleIncrement() {
     this.counter++;
     this.server.emit('counterUpdated', this.counter);
   }
 
   @SubscribeMessage('decrement')
-  handleDecreament() {
+  handleDecrement() {
     this.counter--;
     this.server.emit('counterUpdated', this.counter);
   }

@@ -9,7 +9,7 @@
 <body>
     <h1>Counter: <span id="counter">0</span></h1>
     <button onclick="increment()">+</button>
-    <button onclick="increment()">-</button>
+    <button onclick="decrement()">-</button>
 
     <script>
         const socket = io('http://localhost:3000');
@@ -21,8 +21,8 @@
         function increment() {
             socket.emit('increment');
         };
-        function decerement() {
-            socket.emit('decerement');
+        function decrement() {
+            socket.emit('decrement');
         };
     </script>
 </body>
