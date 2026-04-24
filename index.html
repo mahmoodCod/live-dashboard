@@ -12,7 +12,7 @@
     <button onclick="decrement()">-</button>
 
     <script>
-        const socket = io('http://localhost:3000');
+        const socket = io('http://localhost:3000/dashboard');
 
         socket.on('counterUpdated', (value) => {
             document.getElementById('counter').innerText = value;
