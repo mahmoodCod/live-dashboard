@@ -15,12 +15,12 @@ export class DashboardGateway {
   @SubscribeMessage('increment')
   handleIncreament() {
     this.counter++;
-    this.server.emit('counter Updated', this.counter);
+    this.server.emit('counterUpdated', this.counter);
   }
 
   @SubscribeMessage('decrement')
   handleDecreament() {
     this.counter--;
-    this.server.emit('counter Updated', this.counter);
+    this.server.emit('counterUpdated', this.counter);
   }
 }
