@@ -1,5 +1,4 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { OrderService } from './order.service';
 import { Server } from 'socket.io';
 import { Order } from './entities/order.entity';
 import { Socket } from 'socket.io-client';
