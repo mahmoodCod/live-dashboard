@@ -16,7 +16,7 @@ export class Order {
   @Column()
   qantity: number;
 
-  @Column()
+  @Column({ default: 'pending' })
   status: string;
 
   @CreateDateColumn()

@@ -23,7 +23,7 @@
             const productName = document.getElementById('productName').value;
             const qantity = document.getElementById('qantity').value;
 
-            const res = await fetch('http://localhost:3000/orders', {
+            const res = await fetch('http://localhost:3000/orders-live', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({productName, qantity}),
