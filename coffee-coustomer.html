@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>create order</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, button { padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>create new order</h1>
+    <form id="orderForm">
+        <input type="text", id="productName", placeholder="product Name", required>
+        <input type="number", id="qantity", placeholder="qantity", required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const productName = document.getElementById('productName').value;
+            const qantity = document.getElementById('qantity').value;
+
+            const res = await fetch('http://localhost:3000/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({productName, qantity}),
+            });
+            if (res.ok){
+                alert('Order created!');
+                document.getElementById('orderForm').reset();           
+            }
+        });
+    </script>
+</body>
+</html>
