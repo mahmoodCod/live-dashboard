@@ -16,4 +16,8 @@ export class OrderService {
 
     return savedOrder;
   }
+
+  async findAll() {
+    return this.orderRepo.find({ order: { createAt: 'DESC' } });
+  }
 }
