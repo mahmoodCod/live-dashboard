@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { DashboardGateway } from './dashboard/dashboard.gateway';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       }),
       inject: [ConfigService],
     }),
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService, DashboardGateway],
