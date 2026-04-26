@@ -144,7 +144,3 @@ For a production-ready deployment, consider:
 - Add authentication for manager panel
 - Add tests for order service, gateway, and controller
 - Containerize with Docker and add CI pipeline
-
-## License
-
-This project is private/internal by default. Add an explicit license before public distribution.
