@@ -1,98 +1,150 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Live Dashboard Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A real-time order management backend built with NestJS, TypeScript, MySQL, and Socket.IO.
+This project provides both HTTP and WebSocket interfaces for creating, tracking, and broadcasting coffee shop orders in real time.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Why This Project
 
-## Description
+This backend is designed for live operational workflows where state changes must be visible immediately (for example: customer order submission and manager monitoring panels).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+It focuses on:
+- clear modular architecture
+- real-time event delivery
+- database-backed persistence
+- clean foundation for scaling into production
 
-## Project setup
+## Core Features
 
-```bash
-$ npm install
+- **Real-time updates** with Socket.IO namespace-based gateway (`orders-live`)
+- **REST endpoint** for order creation
+- **MySQL persistence** via TypeORM entities and repositories
+- **Global configuration** with `.env` using `@nestjs/config`
+- **CORS support** for local multi-client development
+- **Simple frontend clients** for customer order creation and manager live monitoring
+
+## Tech Stack
+
+- NestJS 11
+- TypeScript
+- MySQL
+- TypeORM
+- Socket.IO
+- ESLint + Prettier
+
+## Project Structure
+
+```text
+src/
+  app.module.ts
+  main.ts
+  dashboard/
+    dashboard.gateway.ts
+  order/
+    entities/
+      order.entity.ts
+    order.module.ts
+    order.controller.ts
+    order.service.ts
+    order.gateway.ts
+coffee-coustomer.html
+coffee-manager.html
 ```
 
-## Compile and run the project
+## Architecture Overview
 
-```bash
-# development
-$ npm run start
+1. A customer submits a new order from `coffee-coustomer.html`.
+2. The browser sends `POST /orders-live`.
+3. `OrderController` calls `OrderService.createOrder(...)`.
+4. `OrderService` persists the order in MySQL through TypeORM.
+5. `OrderService` triggers `OrderGateway.emitNewOrder(...)`.
+6. Connected manager clients on `orders-live` receive `newOrder` instantly.
+7. On connection, managers also receive `initialOrders`.
 
-# watch mode
-$ npm run start:dev
+## API and Events
 
-# production mode
-$ npm run start:prod
+### HTTP
+
+- `POST /orders-live`
+  - Creates a new order
+  - Request body:
+
+```json
+{
+  "productName": "Latte",
+  "quantity": 2
+}
 ```
 
-## Run tests
+### WebSocket (Namespace: `orders-live`)
 
-```bash
-# unit tests
-$ npm run test
+- `initialOrders` -> emitted when a manager client connects
+- `newOrder` -> emitted whenever a new order is created
 
-# e2e tests
-$ npm run test:e2e
+## Environment Variables
 
-# test coverage
-$ npm run test:cov
+Create a `.env` file in the project root. Typical values:
+
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=your_password
+DB_NAME=live-dashboard
+DB_SYNCHRONIZE=true
 ```
 
-## Deployment
+> Note: `DB_SYNCHRONIZE=true` is convenient for development but should usually be `false` in production.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Getting Started
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 1) Install dependencies
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 2) Start the backend
 
-## Resources
+```bash
+npm run start:dev
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### 3) Open clients
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Open `coffee-coustomer.html` to create orders
+- Open `coffee-manager.html` to watch live incoming orders
 
-## Support
+## Scripts
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run start
+npm run start:dev
+npm run start:prod
+npm run build
+npm run lint
+npm run test
+npm run test:e2e
+```
 
-## Stay in touch
+## Production Notes
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+For a production-ready deployment, consider:
+- strict CORS allowlist (no wildcard)
+- DTO validation with `class-validator` + `ValidationPipe`
+- authentication and role-based authorization
+- database migrations instead of synchronize
+- centralized logging and monitoring
+- rate limiting and security headers
+
+## Roadmap
+
+- Add full order lifecycle status transitions
+- Add pagination and filtering for manager dashboard
+- Add authentication for manager panel
+- Add tests for order service, gateway, and controller
+- Containerize with Docker and add CI pipeline
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is private/internal by default. Add an explicit license before public distribution.
