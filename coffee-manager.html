@@ -27,8 +27,20 @@
         <tbody id="ordersTable"></tbody>
     </table>
 
+    <audio id="notificationSound" preload="auto" style="display: none;">
+        <source src="sound.wav" type="audio/wav">
+    </audio>
+
     <script>
         const socket = io('http://localhost:3000/orders-live');
+        const audio = document.getElementById('notificationSound');
+
+        function playNotificationSound() {
+            if (audio) {
+                audio.volume = 0.7;
+                audio.play().catch(e => console.log('پخش صدا ممکن نیست:', e));
+            }
+        }
 
         function addOrderToTable(order, prepend = true) {
             const tbody = document.getElementById('ordersTable');
@@ -53,16 +65,24 @@
 
         socket.on('newOrder', (order) => {
             addOrderToTable(order, true);
+            
             if (Notification.permission === 'granted') {
-                new Notification('سفارش جدید', {
-                    body: `${order.productName} x ${order.quantity}`
+                new Notification('سفارش جدید!', {
+                    body: `${order.productName} - تعداد: ${order.quantity}`,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/190/190411.png'
                 });
             }
+            
+            playNotificationSound();
         });
 
         if (Notification.permission !== 'denied') {
             Notification.requestPermission();
         }
+
+        document.body.addEventListener('click', () => {
+            if (audio) audio.play().then(() => console.log('صدای نوتیفیکیشن آماده شد')).catch(e => console.log(e));
+        }, { once: true });
     </script>
 </body>
 </html>
