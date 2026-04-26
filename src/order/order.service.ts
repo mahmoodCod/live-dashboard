@@ -12,8 +12,8 @@ export class OrderService {
     private readonly orderGateway: OrderGateway,
   ) {}
 
-  async createOrder(productName: string, qantity: number, status: string) {
-    const order = this.orderRepo.create({ productName, qantity, status });
+  async createOrder(productName: string, quantity: number, status: string) {
+    const order = this.orderRepo.create({ productName, quantity, status });
     const savedOrder = await this.orderRepo.save(order);
     this.orderGateway.emitNewOrder(savedOrder);
     return savedOrder;

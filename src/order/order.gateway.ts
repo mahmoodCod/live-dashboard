@@ -1,7 +1,6 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Order } from './entities/order.entity';
-import { Socket } from 'socket.io-client';
 
 @WebSocketGateway({
   namespace: 'orders-live',

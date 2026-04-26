@@ -13,7 +13,7 @@
     <h1>create new order</h1>
     <form id="orderForm">
         <input type="text", id="productName", placeholder="product Name", required>
-        <input type="number", id="qantity", placeholder="qantity", required>
+        <input type="number", id="quantity", placeholder="quantity", required>
         <button type="submit">Submit</button>
     </form>
 
@@ -21,12 +21,12 @@
         document.getElementById('orderForm').addEventListener('submit', async(e) => {
             e.preventDefault();
             const productName = document.getElementById('productName').value;
-            const qantity = document.getElementById('qantity').value;
+            const quantity = document.getElementById('quantity').value;
 
             const res = await fetch('http://localhost:3000/orders-live', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({productName, qantity}),
+                body: JSON.stringify({productName, quantity}),
             });
             if (res.ok){
                 alert('Order created!');

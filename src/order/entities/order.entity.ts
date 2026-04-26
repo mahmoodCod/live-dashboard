@@ -14,7 +14,7 @@ export class Order {
   productName: string;
 
   @Column()
-  qantity: number;
+  quantity: number;
 
   @Column({ default: 'pending' })
   status: string;

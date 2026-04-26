@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Live Orders Dashboard</title>
     <script src="https://unpkg.com/socket.io-client@4.8.3/dist/socket.io.min.js"></script>
     <style>
         body { font-family: Arial; padding: 20px; }
@@ -34,35 +34,34 @@
             const tbody = document.getElementById('ordersTable');
             const tr = document.createElement('tr');
             tr.innerHTML = `
-            <td>${order.id}</td>
-            <td>${order.productName}</td>
-            <td>${order.quantity}</td>
-            <td>${order.status}</td>
-            <td>${new Date(order.createdAt).toLocaleString()}</td>
+                <td>${order.id}</td>
+                <td>${order.productName}</td>
+                <td>${order.quantity}</td>
+                <td>${order.status}</td>
+                <td>${new Date(order.createdAt).toLocaleString()}</td>
             `;
             if (prepend) {
                 tbody.prepend(tr);
             } else {
                 tbody.appendChild(tr);
             }
+        }
 
-            socket.on('initialOrders', orders => {
-                orders.revers().forEach(order => addOrderToTable(order, false));
-            });
+        socket.on('initialOrders', (orders) => {
+            orders.slice().reverse().forEach(order => addOrderToTable(order, false));
+        });
 
-            socket.on('newOrder', order => {
-                addOrderToTable(order);
-            });
-
+        socket.on('newOrder', (order) => {
+            addOrderToTable(order, true);
             if (Notification.permission === 'granted') {
-                new Notification('New Order', {
+                new Notification('سفارش جدید', {
                     body: `${order.productName} x ${order.quantity}`
                 });
             }
+        });
 
-            if (Notification.permission === 'granted') {
-                Notification.requestPermission();
-            }
+        if (Notification.permission !== 'denied') {
+            Notification.requestPermission();
         }
     </script>
 </body>
